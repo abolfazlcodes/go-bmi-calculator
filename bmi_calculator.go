@@ -75,8 +75,22 @@ func main() {
 		return
 	}
 
-	var bmi = calculateBMI(userWeight, userHeight)
+	var checkedHeight = validateUserHeight(userHeight)
+
+	var bmi = calculateBMI(userWeight, checkedHeight)
 	storeUserBMI(userName, bmi)
 
 	fmt.Println(userName, userHeight, userWeight, bmi)
+}
+
+func validateUserHeight(height float64) float64 {
+	var result float64
+	if height > 3 {
+		// it means the user had entered his height in centimeters ==> we need to convert it to meters
+		result = height / 100
+		return result
+	}
+
+	// otherwise it is already in meters ==> return it
+	return height
 }
