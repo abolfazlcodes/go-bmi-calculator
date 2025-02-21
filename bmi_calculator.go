@@ -76,8 +76,8 @@ func readBMIFromFile(userName string) (float64, error) {
 	data, err := os.ReadFile(fileName)
 
 	if err != nil {
-		fmt.Printf("Error reading file: %v\n", err)
-		return 0, errors.New("Something went wrong during reading from file. Please try again")
+		// fmt.Printf("Error reading file: %v\n", err)
+		return 0, errors.New("No previous BMI was found!")
 	}
 
 	// Convert bytes to string
@@ -112,14 +112,20 @@ func main() {
 	userPrevBMI, errorPrev := readBMIFromFile(userName)
 
 	if errorPrev != nil {
-		panic(errorPrev)
+		fmt.Println(errorPrev)
 	}
 
-	fmt.Printf("Your previous BMI is: %.2f", userPrevBMI)
+	fmt.Printf("Your previous BMI is: %.2f\n", userPrevBMI)
 
 	var recalculateBMIAnswer string
 	fmt.Println("Do you want to recalculate your BMI? (y/n): ")
 	fmt.Scan(&recalculateBMIAnswer)
+
+	// if answer ==> n --> stop the app
+	if recalculateBMIAnswer != "y" {
+		fmt.Println("Exiting the app...")
+		return
+	}
 
 	userWeight, weightErrorMsg := getUserInput("Weight")
 	userHeight, heightErrorMsg := getUserInput("Height")
@@ -138,6 +144,8 @@ func main() {
 
 	var bmi = calculateBMI(userWeight, checkedHeight)
 	error := storeUserBMI(userName, bmi)
+
+	fmt.Printf("You BMI is %.2f", bmi)
 
 	if error != nil {
 		fmt.Println(error)
